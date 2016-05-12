@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+       <!-- 自动加载构建bean 不扫描 controller 注解 避免事务失效问题 -->
+       <context:component-scan base-package="com.es.building.common">
+              <context:exclude-filter type="annotation"
+                                      expression="org.springframework.stereotype.Controller"/>
+       </context:component-scan>
+
+
+       <!-- db config 加载配置属性文件
+       <context:property-placeholder
+               ignore-unresolvable="true" location="classpath*:resources.properties"/>
+
+       <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+             destroy-method="close">
+              <property name="url" value="${jdbc.url}"/>
+              <property name="driverClassName" value="${jdbc.driver}"/>
+              <property name="username" value="${jdbc.user}"/>
+              <property name="password" value="${jdbc.password}"/>
+       </bean>
+
+
+       <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+              <property name="dataSource" ref="dataSource"></property>
+       </bean>
+
+       <tx:advice id="txAdvice" transaction-manager="transactionManager">
+              <tx:attributes >
+                     <tx:method name="delete*" propagation="REQUIRED" read-only="false"  />
+                     <tx:method name="insert*" propagation="REQUIRED" read-only="false"/>
+                     <tx:method name="update*" propagation="REQUIRED" read-only="false"/>
+                     <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+                     <tx:method name="select*" propagation="REQUIRED" read-only="true"/>
+                     <tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+                     <tx:method name="make*" propagation="SUPPORTS" read-only="false"/>
+              </tx:attributes>
+       </tx:advice>
+
+       <aop:config >
+              <aop:pointcut expression="execution(* com.es.building.common.thin.*.*(..))" id="serviceCutPoint"/>
+              <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceCutPoint"/>
+       </aop:config>
+
+-->
+       <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+              <!--<property name="dataSource" ref="dataSource"></property>-->
+              <!--<property name="configLocation" value="classpath:mybatis-config.xml"></property>-->
+
+              <!--&lt;!&ndash;mybatis配置文件自动扫描路径&ndash;&gt;-->
+              <!--<property name="mapperLocations">-->
+                     <!--<array>-->
+                            <!--<value>classpath*:mybatismappers/*.xml</value>-->
+                     <!--</array>-->
+              <!--</property>-->
+
+       <!--</bean>-->
+
+
+       <bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+              <property name="cacheManager" ref="ehcacheManager"/>
+       </bean>
+
+       <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+              <property name="configLocation" value="classpath:ehcache.xml"/>
+       </bean>
+
+
+
+
+       <!-- Mapper接口所在包名，Spring会自动查找其下的类 basePackage指定要扫描的包，在此包之下的映射器都会被
+           搜索到。可指定多个包，包与包之间用逗号或分号分隔
+       <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+
+           <property name="basePackage" value="com.hp.es.common.dao" />
+           <property name="sqlSessionFactory" value="sqlSessionFactory"></property>
+       </bean>
+       -->
+       <mybatis:scan base-package="com.es.building.mapper" />
+
+
+       <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+              <property name="triggers">
+                     <list>
+                            <ref bean="trigger"/>
+                     </list>
+              </property>
+              <property name="autoStartup" value="true"/>
+       </bean>
+
+       <bean id="trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+              <property name="jobDetail" ref="jobDetail"/>
+              <property name="cronExpression" value="0 0 3 * * ?"/>
+       </bean>
+
+       <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+              <property name="targetObject" ref="cleaner"/>
+              <property name="targetMethod" value="execute"/>
+              <property name="concurrent" value="false"/>
+       </bean>
+
+       <bean id="cleaner" class="com.es.building.common.util.ExpiredDataCleaner"/>
+
+       <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+              <property name="staticMethod" value="com.es.building.common.util.PermissionManager.setTokenLastLimit" />
+              <property name="arguments" value="720" /><!--token过期时间-->
+       </bean>
+
+       <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+              <property name="staticMethod" value="com.es.building.common.util.PermissionManager.setCriticalLimit" />
+              <property name="arguments" value="20" /><!--生成新token的临界时间-->
+       </bean>
+
+       <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+              <property name="staticMethod" value="com.es.building.common.util.Constants.setDefaultOfferId" />
+              <property name="arguments" value="100" /><!--默认试用套餐的数据库id-->
+       </bean>
+</beans>

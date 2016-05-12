@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.es.building.mapper.TusrProfileDetailEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.es.building.common.entity.TusrProfileDetailEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="profile_id" property="profileId" jdbcType="BIGINT" />
+    <result column="device_key" property="deviceKey" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="INTEGER" />
+    <result column="profile_status" property="profileStatus" jdbcType="VARCHAR" />
+    <result column="profile_command" property="profileCommand" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, profile_id, device_key, channel, profile_status, profile_command, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tusr_profile_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tusr_profile_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.es.building.common.entity.TusrProfileDetailEntity" >
+    insert into tusr_profile_detail (id, profile_id, device_key, 
+      channel, profile_status, profile_command, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{profileId,jdbcType=BIGINT}, #{deviceKey,jdbcType=VARCHAR}, 
+      #{channel,jdbcType=INTEGER}, #{profileStatus,jdbcType=VARCHAR}, #{profileCommand,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.es.building.common.entity.TusrProfileDetailEntity" >
+    insert into tusr_profile_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="profileId != null" >
+        profile_id,
+      </if>
+      <if test="deviceKey != null" >
+        device_key,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="profileStatus != null" >
+        profile_status,
+      </if>
+      <if test="profileCommand != null" >
+        profile_command,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="profileId != null" >
+        #{profileId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceKey != null" >
+        #{deviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="profileStatus != null" >
+        #{profileStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="profileCommand != null" >
+        #{profileCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.es.building.common.entity.TusrProfileDetailEntity" >
+    update tusr_profile_detail
+    <set >
+      <if test="profileId != null" >
+        profile_id = #{profileId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceKey != null" >
+        device_key = #{deviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="profileStatus != null" >
+        profile_status = #{profileStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="profileCommand != null" >
+        profile_command = #{profileCommand,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.es.building.common.entity.TusrProfileDetailEntity" >
+    update tusr_profile_detail
+    set profile_id = #{profileId,jdbcType=BIGINT},
+      device_key = #{deviceKey,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=INTEGER},
+      profile_status = #{profileStatus,jdbcType=VARCHAR},
+      profile_command = #{profileCommand,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

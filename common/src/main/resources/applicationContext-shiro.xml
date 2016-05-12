@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <description>Shiro安全配置</description>
+
+
+    <!-- Realm实现 -->
+    <!--<bean id="statelessRealm" class="com.es.building.security.StatelessRealm">-->
+        <!--<property name="cachingEnabled" value="false" />-->
+        <!--<property name="credentialsMatcher" ref="statelessMatcher" />-->
+    <!--</bean>-->
+
+    <bean id="userDbRealm" class="com.es.building.common.security.UserDbRealm">
+        <property name="cachingEnabled" value="false" />
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+
+    <!-- Subject工厂 -->
+    <bean id="subjectFactory"
+          class="com.es.building.common.security.StatelessDefaultSubjectFactory" />
+
+    <!-- 会话管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.session.mgt.DefaultSessionManager">
+        <property name="sessionValidationSchedulerEnabled" value="false" />
+    </bean>
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list>
+                <!--<ref bean="statelessRealm"></ref>-->
+                <ref bean="userDbRealm"></ref>
+            </list>
+        </property>
+        <property name="subjectDAO.sessionStorageEvaluator.sessionStorageEnabled"
+                  value="false" />
+        <property name="subjectFactory" ref="subjectFactory" />
+        <property name="sessionManager" ref="sessionManager" />
+    </bean>
+
+
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+    <bean
+            class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod"
+                  value="org.apache.shiro.SecurityUtils.setSecurityManager" />
+        <property name="arguments" ref="securityManager" />
+    </bean>
+
+    <bean id="statelessAuthcFilter" class="com.es.building.common.security.StatelessAuthcFilter" />
+    <!-- 动态权限验证 -->
+
+    <!-- 凭证匹配器 -->
+    <bean id="credentialsMatcher"
+          class="com.es.building.common.security.RetryLimitCredentialsMatcher">
+        <constructor-arg ref="cacheManagerWrapper" />
+    </bean>
+
+    <!--<bean id="StatelessAuthServiceImpl" class="com.es.building.common.service.impl.StatelessAuthServiceImpl">-->
+        <!--<constructor-arg ref="springCacheManager" />-->
+    <!--</bean>-->
+
+    <!--<bean id="statelessMatcher" class="com.es.building.common.security.StatelessCredentialMatcher"></bean>-->
+
+
+    <bean id="filterChainManager"
+          class="com.es.building.common.security.CustomDefaultFilterChainManager">
+        <property name="loginUrl" value="/login" />
+        <property name="successUrl" value="/" />
+        <property name="unauthorizedUrl" value="/error.jsp" />
+
+        <property name="customFilters">
+            <util:map>
+                <entry key="statelessAuthc" value-ref="statelessAuthcFilter" />
+            </util:map>
+        </property>
+        <property name="defaultFilterChainDefinitions">
+            <value>
+                <!--生产环境  -->
+                /V1/user/login=anon
+                <!--&lt;!&ndash;忘记密码&ndash;&gt;-->
+                <!--/V1/tenantportal/public/tenant/retrieve/**=anon-->
+                <!--&lt;!&ndash;用户注册/重发激活邮件&ndash;&gt;-->
+                <!--/V1/tenantportal/public/tenant=anon-->
+                <!--&lt;!&ndash;账户激活&ndash;&gt;-->
+                <!--/V1/tenantportal/public/tenant/*/activation/**=anon-->
+                <!--&lt;!&ndash;重置密码&ndash;&gt;-->
+                <!--/V1/tenantportal/public/tenant/*/resetPasswd/**=anon-->
+                <!--/V1/tenantportal/public/tenant/login/**=anon-->
+                <!--/V1/tenantportal/public/tenant/*/authCode/**=anon-->
+                <!--/V1/tenantportal/private/**=anon-->
+                <!--/V1/iotplatform/private/**=anon-->
+                /**=statelessAuthc
+                <!--  
+                /V1/iotplatform/public/**=statelessAuthc
+                /V1/tenantportal/public/**=statelessAuthc
+                -->
+                <!--/**=anon-->
+                <!-- 禁用权限系统-->
+                <!--/**=anon-->
+            </value>
+        </property>
+    </bean>
+
+
+    <bean id="filterChainResolver"
+          class="com.es.building.common.security.CustomPathMatchingFilterChainResolver">
+        <property name="customDefaultFilterChainManager" ref="filterChainManager" />
+    </bean>
+
+
+    <!-- Shiro Filter <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager" /> </bean> -->
+    <bean id="customShiroFilter" class="com.es.building.common.security.CustomShiroFilter">
+        <property name="securityManager" ref="securityManager"></property>
+        <property name="filterChainResolver" ref="filterChainResolver"></property>
+    </bean>
+
+    <!--Custom Shiro Filter -->
+    <bean id="shiroFilter" class="com.es.building.common.security.CustomerShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager" />
+        <property name="customShiroFilter" ref="customShiroFilter"></property>
+    </bean>
+
+
+    <!--
+        <bean
+            class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+            <property name="targetObject" ref="shiroFilter" />
+            <property name="targetMethod" value="setFilterChainResolver" />
+            <property name="arguments" ref="filterChainResolver" />
+        </bean>
+     -->
+
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+
+</beans>
