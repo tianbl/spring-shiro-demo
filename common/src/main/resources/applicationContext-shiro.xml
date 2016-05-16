@@ -86,7 +86,7 @@
         <property name="defaultFilterChainDefinitions">
             <value>
                 <!--生产环境  -->
-                /V1/user/login=anon
+                /es/public/user/login=anon
                 <!--&lt;!&ndash;忘记密码&ndash;&gt;-->
                 <!--/V1/tenantportal/public/tenant/retrieve/**=anon-->
                 <!--&lt;!&ndash;用户注册/重发激活邮件&ndash;&gt;-->

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.es.building.common.mapper.TusrVirtualDeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.es.building.common.entity.TusrVirtualDevice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="virtual_device_name" property="virtualDeviceName" jdbcType="VARCHAR" />
+    <result column="device_key" property="deviceKey" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="INTEGER" />
+    <result column="sub_device_addr" property="subDeviceAddr" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="area_id" property="areaId" jdbcType="BIGINT" />
+    <result column="channel_param" property="channelParam" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, virtual_device_name, device_key, channel, sub_device_addr, type_code, area_id, 
+    channel_param, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tusr_virtual_device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tusr_virtual_device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.es.building.common.entity.TusrVirtualDevice" >
+    insert into tusr_virtual_device (id, virtual_device_name, device_key, 
+      channel, sub_device_addr, type_code, 
+      area_id, channel_param, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{virtualDeviceName,jdbcType=VARCHAR}, #{deviceKey,jdbcType=VARCHAR}, 
+      #{channel,jdbcType=INTEGER}, #{subDeviceAddr,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, 
+      #{areaId,jdbcType=BIGINT}, #{channelParam,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.es.building.common.entity.TusrVirtualDevice" >
+    insert into tusr_virtual_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="virtualDeviceName != null" >
+        virtual_device_name,
+      </if>
+      <if test="deviceKey != null" >
+        device_key,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="subDeviceAddr != null" >
+        sub_device_addr,
+      </if>
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="channelParam != null" >
+        channel_param,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="virtualDeviceName != null" >
+        #{virtualDeviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceKey != null" >
+        #{deviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="subDeviceAddr != null" >
+        #{subDeviceAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=BIGINT},
+      </if>
+      <if test="channelParam != null" >
+        #{channelParam,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.es.building.common.entity.TusrVirtualDevice" >
+    update tusr_virtual_device
+    <set >
+      <if test="virtualDeviceName != null" >
+        virtual_device_name = #{virtualDeviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceKey != null" >
+        device_key = #{deviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="subDeviceAddr != null" >
+        sub_device_addr = #{subDeviceAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=BIGINT},
+      </if>
+      <if test="channelParam != null" >
+        channel_param = #{channelParam,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.es.building.common.entity.TusrVirtualDevice" >
+    update tusr_virtual_device
+    set virtual_device_name = #{virtualDeviceName,jdbcType=VARCHAR},
+      device_key = #{deviceKey,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=INTEGER},
+      sub_device_addr = #{subDeviceAddr,jdbcType=VARCHAR},
+      type_code = #{typeCode,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=BIGINT},
+      channel_param = #{channelParam,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

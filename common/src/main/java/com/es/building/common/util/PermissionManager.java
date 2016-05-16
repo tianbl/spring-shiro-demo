@@ -1,7 +1,5 @@
 package com.es.building.common.util;
 
-
-
 import com.es.building.common.entity.TokenKit;
 
 import java.util.*;

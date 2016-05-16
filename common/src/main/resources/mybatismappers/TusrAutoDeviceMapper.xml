@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.es.building.common.mapper.TusrAutoDeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.es.building.common.entity.TusrAutoDevice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="device_key" property="deviceKey" jdbcType="BIGINT" />
+    <result column="channel" property="channel" jdbcType="INTEGER" />
+    <result column="auto_state" property="autoState" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, auto_id, device_key, channel, auto_state
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tusr_auto_device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tusr_auto_device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.es.building.common.entity.TusrAutoDevice" >
+    insert into tusr_auto_device (id, auto_id, device_key, 
+      channel, auto_state)
+    values (#{id,jdbcType=BIGINT}, #{autoId,jdbcType=BIGINT}, #{deviceKey,jdbcType=BIGINT}, 
+      #{channel,jdbcType=INTEGER}, #{autoState,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.es.building.common.entity.TusrAutoDevice" >
+    insert into tusr_auto_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="deviceKey != null" >
+        device_key,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="autoState != null" >
+        auto_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="autoId != null" >
+        #{autoId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceKey != null" >
+        #{deviceKey,jdbcType=BIGINT},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="autoState != null" >
+        #{autoState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.es.building.common.entity.TusrAutoDevice" >
+    update tusr_auto_device
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceKey != null" >
+        device_key = #{deviceKey,jdbcType=BIGINT},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="autoState != null" >
+        auto_state = #{autoState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.es.building.common.entity.TusrAutoDevice" >
+    update tusr_auto_device
+    set auto_id = #{autoId,jdbcType=BIGINT},
+      device_key = #{deviceKey,jdbcType=BIGINT},
+      channel = #{channel,jdbcType=INTEGER},
+      auto_state = #{autoState,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

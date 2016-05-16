@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.es.building.common.mapper.TusrGroupDeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.es.building.common.entity.TusrGroupDevice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="device_key" property="deviceKey" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="INTEGER" />
+    <result column="command" property="command" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, device_key, channel, command
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tusr_group_device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tusr_group_device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.es.building.common.entity.TusrGroupDevice" >
+    insert into tusr_group_device (id, group_id, device_key, 
+      channel, command)
+    values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{deviceKey,jdbcType=VARCHAR}, 
+      #{channel,jdbcType=INTEGER}, #{command,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.es.building.common.entity.TusrGroupDevice" >
+    insert into tusr_group_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="deviceKey != null" >
+        device_key,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="command != null" >
+        command,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceKey != null" >
+        #{deviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="command != null" >
+        #{command,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.es.building.common.entity.TusrGroupDevice" >
+    update tusr_group_device
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceKey != null" >
+        device_key = #{deviceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=INTEGER},
+      </if>
+      <if test="command != null" >
+        command = #{command,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.es.building.common.entity.TusrGroupDevice" >
+    update tusr_group_device
+    set group_id = #{groupId,jdbcType=BIGINT},
+      device_key = #{deviceKey,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=INTEGER},
+      command = #{command,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

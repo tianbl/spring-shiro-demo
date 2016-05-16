@@ -1,7 +1,7 @@
 package com.es.building.common.security;
 
 
-import com.es.building.common.entity.TsysUserEntity;
+import com.es.building.common.entity.TsysUser;
 import com.es.building.common.thin.TsysUserThin;
 import com.es.building.common.util.PassWordHelper;
 import org.apache.shiro.authc.*;
@@ -43,7 +43,7 @@ public class UserDbRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String userName = token.getPrincipal().toString();
         logger.info("************* doGetAuthorizationInfo userName="+userName);
-        TsysUserEntity userEntity= tsysUserThin.selectByUserName(userName);
+        TsysUser userEntity= tsysUserThin.selectByUserName(userName);
 
         if(userEntity != null){
             SimpleAuthenticationInfo simpleAuthenticationInfo = null;
